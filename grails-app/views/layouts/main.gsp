@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <asset:stylesheet src="application.css"/>
     <asset:javascript src="application.js"/>
+    <asset:javascript src="modalOperations.js"/>
     <g:layoutHead/>
 </head>
 
@@ -35,7 +36,7 @@
                         </div>
                     </form></li>
                     <g:if test="${session.user}">
-                        <li><a href="#" data-toggle="modal" data-target="#createTopicModal"><span
+                        <li><a id="createTopic" href="#" data-toggle="modal" data-target="#createTopicModal"><span
                                 class="fa fa-comment" style="font-size: 20px;"></span></a></li>
                         <li><a href="#" data-toggle="modal" data-target="#sendInvitationModal"><span
                                 class="fa fa-envelope-o" style="font-size: 20px;"></span></a></li>
@@ -73,6 +74,27 @@
         </div>
     </g:if>
     <g:layoutBody/>
+    <g:if test="${session.user}">
+        <div class="modal fade" id="createTopicModal">
+            <div class="modal-dialog">
+                <div class="modal-content" id="modalContent">
+                    <div class="modal-body">
+                        <asset:image src="spinner.gif"/> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </g:if>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#createTopic').click(function () {
+            $.post("/topic/create", function (response) {
+                $('#modalContent').html(response);
+            });
+        });
+    })
+</script>
 </body>
 </html>

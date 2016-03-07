@@ -13,6 +13,17 @@
 </head>
 
 <body>
+<div class="col-md-7">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <asset:image src="spinner.gif"/> Loading...
+        </div>
+    </div>
+</div>
 
+<div class="col-md-5">
+    <g:render template="login"></g:render>
+    <g:render template="register"></g:render>
+</div>
 </body>
 </html>
