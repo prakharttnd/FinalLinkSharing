@@ -11,3 +11,15 @@
 *= require font-awesome.min
 *= require_self
 */
+
+.error {
+    color: #ff0000;
+}
+
+.success {
+    color: #008000;
+}
+
+.warning {
+    color: #985f0d;
+}

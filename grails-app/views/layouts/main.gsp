@@ -4,7 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <asset:stylesheet src="application.css"/>
     <asset:javascript src="application.js"/>
-    <asset:javascript src="modalOperations.js"/>
     <g:layoutHead/>
 </head>
 
@@ -18,7 +17,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Link Sharing</a>
+                <g:link uri="/" class="navbar-brand">Link Sharing</g:link>
+                %{--<a class="navbar-brand" href="#">Link Sharing</a>--}%
             </div>
 
             <div class="collapse navbar-collapse" id="myNavbar">
@@ -38,12 +38,14 @@
                     <g:if test="${session.user}">
                         <li><a id="createTopic" href="#" data-toggle="modal" data-target="#createTopicModal"><span
                                 class="fa fa-comment" style="font-size: 20px;"></span></a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#sendInvitationModal"><span
+                        <li><a id="sendInvitation" href="#" data-toggle="modal" data-target="#sendInvitationModal"><span
                                 class="fa fa-envelope-o" style="font-size: 20px;"></span></a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#createLinkResourceModal"><span
-                                class="glyphicon glyphicon-link" style="font-size: 20px;"></span></a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#createDocumentResourceModal"><span
-                                class="fa fa-file-o" style="font-size: 20px;"></span></a></li>
+                        <li><a id="createLinkResource" href="#" data-toggle="modal"
+                               data-target="#createLinkResourceModal"><span
+                                    class="glyphicon glyphicon-link" style="font-size: 20px;"></span></a></li>
+                        <li><a id="createDocumentResource" href="#" data-toggle="modal"
+                               data-target="#createDocumentResourceModal"><span
+                                    class="fa fa-file-o" style="font-size: 20px;"></span></a></li>
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"><span
                                 class="glyphicon glyphicon-user"
                                 style="font-size: 20px;"></span> ${session.user?.username} <span
@@ -51,11 +53,9 @@
                             <ul class="dropdown-menu">
                                 <li><a href="#">Profile</a></li>
                                 <g:if test="${session.user?.admin}">
-                                    <li><a href="#">Users</a></li>
-                                    <li><a href="#">Topics</a></li>
-                                    <li><a href="#">Posts</a></li>
+                                    <li><a href="/user/list">Users</a></li>
                                 </g:if>
-                                <li><a href="/login/logout">Logout</a></li>
+                                <li><a href="/user/logout">Logout</a></li>
                             </ul>
                         </li>
                     </g:if>
@@ -63,38 +63,132 @@
             </div>
         </div>
     </nav>
+
     <g:if test="${flash.error}">
-        <div class="alert alert-danger">
+        <div class="alert alert-danger" id="error-alert">
             <strong>Error!!</strong> ${flash.error}
         </div>
     </g:if>
+
     <g:if test="${flash.message}">
-        <div class="alert alert-warning">
+        <div class="alert alert-success" id="success-alert">
             ${flash.message}
         </div>
     </g:if>
+
+    <div id="message">
+
+    </div>
+
     <g:layoutBody/>
+
     <g:if test="${session.user}">
         <div class="modal fade" id="createTopicModal">
             <div class="modal-dialog">
-                <div class="modal-content" id="modalContent">
-                    <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Create Topic</h4>
+                    </div>
+
+                    <div class="modal-body" id="createTopicModalBody">
                         <asset:image src="spinner.gif"/> Loading...
                     </div>
                 </div>
             </div>
         </div>
-    </g:if>
-</div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#createTopic').click(function () {
-            $.post("/topic/create", function (response) {
-                $('#modalContent').html(response);
+        <div class="modal fade" id="sendInvitationModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Send Invitation</h4>
+                    </div>
+
+                    <div class="modal-body" id="sendInvitationModalBody">
+                        <asset:image src="spinner.gif"/> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="createLinkResourceModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Create Link Resource</h4>
+                    </div>
+
+                    <div class="modal-body" id="createLinkResourceModalBody">
+                        <asset:image src="spinner.gif"/> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="createDocumentResourceModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Create Document Resource</h4>
+                    </div>
+
+                    <div class="modal-body" id="createDocumentResourceModalBody">
+                        <asset:image src="spinner.gif"/> Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $('#createTopic').click(function () {
+                $.post("/topic/renderCreateTopicTemplate", function (response) {
+                    $('#createTopicModalBody').html(response);
+                });
             });
-        });
-    })
+
+            $(document).on('click', '#sendInvitation', function () {
+                $.post("/topic/renderSendInvitationTemplate", function (response) {
+                    $('#sendInvitationModalBody').html(response);
+                });
+            });
+
+            //            $('#sendInvitation').click(function () {
+            //                $.post("/topic/renderSendInvitationTemplate", function (response) {
+            //                    $('#sendInvitationModalBody').html(response);
+            //                });
+            //            });
+
+            $('#createLinkResource').click(function () {
+                $.post("/linkResource/renderCreateLinkResourceTemplate", function (response) {
+                    $('#createLinkResourceModalBody').html(response);
+                });
+            });
+
+            $('#createDocumentResource').click(function () {
+                $.post("/documentResource/renderCreateDocumentResourceTemplate", function (response) {
+                    $('#createDocumentResourceModalBody').html(response);
+                });
+            });
+        </script>
+    </g:if>
+
+</div>
+<script>
+    $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+        $("#success-alert").alert('close');
+    });
+
+    $("#error-alert").fadeTo(2000, 500).slideUp(500, function () {
+        $("#error-alert").alert('close');
+    });
+
+    $("#message-alert").fadeTo(2000, 500).slideUp(500, function () {
+        $("#message-alert").alert('close');
+    });
 </script>
 </body>
 </html>

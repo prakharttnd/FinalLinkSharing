@@ -1,5 +1,9 @@
 package com.ttnd.linksharing
 
+import com.ttnd.linksharing.co.SearchCO
+import com.ttnd.linksharing.co.UnreadResourceSearchCO
+import com.ttnd.linksharing.vo.UnreadResourceVO
+
 class User {
 
     String username
@@ -7,7 +11,7 @@ class User {
     String password
     String firstName
     String lastName
-    Byte photo
+    byte[] photo
     Boolean admin
     Boolean active
     Date dateCreated
@@ -47,11 +51,19 @@ class User {
         }
     }
 
+    static List<UnreadResourceVO> getUnreadResources(UnreadResourceSearchCO unreadResourceSearchCO) {
+        def unreadItems = ReadingItem.searchUnread(unreadResourceSearchCO).list(max: unreadResourceSearchCO.max, offset: unreadResourceSearchCO.offset)
+        List<UnreadResourceVO> unreadResources = unreadItems.collect {
+            new UnreadResourceVO(resourceCreatorId: it[0], resourceCreatorName: it[1] + " " + it[2], resourceCreatorUsername: it[3], photo: it[4], topicId: it[5], topicName: it[6], resourceId: it[7], description: it[8], dateCreated: it[9], resourceClass: it[10], url: it[11], filepath: it[12])
+        }
+        return unreadResources
+    }
+
     String getFullName() {
-        return "$firstName $lastName"
+        return firstName + " " + lastName
     }
 
     String toString() {
-        return "Name: $fullName, Username: $username, Email: $email"
+        return "Name: ${getFullName()}, Username: $username, Email: $email"
     }
 }

@@ -3,7 +3,7 @@ package com.ttnd.linksharing
 class DocumentResource extends Resource {
 
     String filepath
-    
+
     static hasMany = [resourceRatings: ResourceRating, readingItem: ReadingItem]
 
     static belongsTo = [createdBy: User, topic: Topic]
@@ -13,6 +13,7 @@ class DocumentResource extends Resource {
     }
 
     String toString() {
-        return "User: $createdBy, Topic: $topic, Filepath: $filepath"
+        return "Id: $id"
+        //   return "User: $createdBy, Topic: $topic, Filepath: $filepath"
     }
 }

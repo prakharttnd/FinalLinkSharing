@@ -8,6 +8,8 @@ class ResourceRating {
     Date dateCreated
     Date lastUpdated
 
+    static belongsTo = [resource: Resource, createdBy: User]
+
     static constraints = {
         createdBy nullable: false
         resource nullable: false, unique: 'createdBy'

@@ -1,19 +1,64 @@
 package com.ttnd.linksharing
 
+import com.ttnd.linksharing.co.LoginCO
 import com.ttnd.linksharing.co.UserCO
 import com.ttnd.linksharing.dto.ResponseDTO
+import com.ttnd.linksharing.vo.RecentShareVO
+import com.ttnd.linksharing.vo.UserVO
+import grails.converters.JSON
 
-class UserController {
+class UserController extends BaseController {
+
+    def userService
+    def resourceService
 
     def index() {
-        User user = new User(username: "Prakhar", admin: true)
-        session.user = user
+        List<RecentShareVO> recentShares = resourceService.fetchRecentShares()
+        resourceService.fetchTopPosts(1)
+        render view: 'index', model: [recentShares: recentShares]
+//        render view: 'index'
+    }
+
+    def dashboard() {
+
+    }
+
+    def logout() {
+        session.invalidate()
+        redirect(controller: 'user', action: 'index')
+    }
+
+    def isEmailExists() {
+        render userService.isEmailExists(params.email)
+    }
+
+    def isUsernameExists() {
+        render userService.isUsernameExists(params.username)
     }
 
     def register(UserCO userCO) {
-        User user = new User(userCO.properties)
+        def file = request.getFile('photo')
+        if (!file && !file.empty) {
+            userCO.photo = file.getBytes()
+        }
+        ResponseDTO responseDTO = userService.register(userCO)
+        if (responseDTO.status == 200) {
+            session.user = responseDTO.object as User
+            flash.message = responseDTO.message
+            redirect controller: 'user', action: 'dashboard'
+        } else {
+            flash.error = responseDTO.message
+            redirect controller: 'user', action: 'index'
+        }
+    }
+
+    def loginHandler(LoginCO loginCO) {
+        ResponseDTO responseDTO = userService.loginHandler(loginCO)
+        if (responseDTO.object) {
+            session.user = responseDTO.object as User
+        }
         renderAsJSON {
-            user.save(flush: true)
+            responseDTO
         }
     }
 
@@ -21,16 +66,28 @@ class UserController {
         render template: 'forgetPassword'
     }
 
-    def forgetPassword() {
-        //Email service code goes here
-        Thread.sleep(3000)
-        ResponseDTO responseDTO = new ResponseDTO(status: 200, message: "Email sent successfully")
+    def forgetPassword(String email) {
         renderAsJSON {
-            responseDTO
+            userService.forgetPassword(email)
         }
     }
 
-    private void renderAsJSON(def c1) {
-        render(contentType: "text/json", encoding: "UTF-8", c1)
+    def fetchUserInfo() {
+        UserVO userVO = userService.fetchUserInfo(session.user)
+        String html = ls.userInfo(userVO: userVO)
+        render([html: html] as JSON)
+    }
+
+    def recentShares() {
+        String html = ls.recentShares(recent: resourceService.fetchRecentShares())
+        render([html: html] as JSON)
+    }
+
+    def list() {
+        if (session.user.admin) {
+            render view: 'list'
+        } else {
+            redirect(uri: "/")
+        }
     }
 }

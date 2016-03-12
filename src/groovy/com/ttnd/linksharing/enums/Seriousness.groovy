@@ -1,5 +1,11 @@
 package com.ttnd.linksharing.enums
 
 enum Seriousness {
-    SERIOUS, VERY_SERIOUS, CASUAL
+    SERIOUS('Serious'), VERY_SERIOUS('Very Serious'), CASUAL('Casual')
+
+    String displayText
+
+    Seriousness(String displayText) {
+        this.displayText = displayText
+    }
 }

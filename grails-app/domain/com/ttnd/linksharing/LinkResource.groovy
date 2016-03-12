@@ -13,6 +13,7 @@ class LinkResource extends Resource {
     }
 
     String toString() {
-        return "User: $createdBy, Topic: $topic, Url: $url"
+        return "Id: $id"
+       // return "User: $createdBy, Topic: $topic, Url: $url, Description: $description"
     }
 }

@@ -6,8 +6,8 @@ class UserCO {
     String password
     String firstName
     String lastName
-    Byte photo
-    boolean admin
-    boolean active
+    byte[] photo
+    boolean admin = false
+    boolean active = true
     String confirmPassword
 }

@@ -12,11 +12,23 @@
 //= require_self
 
 if (typeof jQuery !== 'undefined') {
-	(function($) {
-		$(document).ajaxStart(function(){
-			$('#spinner').fadeIn();
-		}).ajaxStop(function(){
-			$('#spinner').fadeOut();
-		});
-	})(jQuery);
+    (function ($) {
+        $(document).ajaxStart(function () {
+            $('#spinner').fadeIn();
+        }).ajaxStop(function () {
+            $('#spinner').fadeOut();
+        });
+    })(jQuery);
+
+    jQuery.validator.addMethod("blank", function (value, element) {
+        var result = false;
+        var value = value.trim();
+        if (value.length > 0) {
+            result = true;
+        }
+        return result;
+    }, "This should not be blank");
 }
+
+
+

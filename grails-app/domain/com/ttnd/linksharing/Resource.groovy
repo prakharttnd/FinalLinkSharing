@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import com.ttnd.linksharing.co.SearchCO
+
 abstract class Resource {
 
     User createdBy
@@ -7,6 +9,8 @@ abstract class Resource {
     String description
     Date dateCreated
     Date lastUpdated
+
+    static belongsTo = [topic: Topic, createdBy: User]
 
     static mapping = {
         description type: 'text'
@@ -16,5 +20,14 @@ abstract class Resource {
         createdBy nullable: false
         topic nullable: false
         description nullable: false, blank: false
+    }
+
+    static namedQueries = {
+        search { SearchCO co ->
+            if (co.q) {
+                ilike('description', "%${co.q}%")
+            }
+            eq('isRead', false)
+        }
     }
 }
