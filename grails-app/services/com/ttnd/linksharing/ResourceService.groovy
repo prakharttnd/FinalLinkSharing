@@ -1,12 +1,10 @@
 package com.ttnd.linksharing
 
-import com.ttnd.linksharing.co.SearchCO
-import com.ttnd.linksharing.dto.ResponseDTO
 import com.ttnd.linksharing.enums.Visibility
 import com.ttnd.linksharing.vo.RecentShareVO
+import com.ttnd.linksharing.vo.ResourceVO
 import com.ttnd.linksharing.vo.TrendingTopicVO
 import grails.transaction.Transactional
-import jdk.internal.org.objectweb.asm.commons.GeneratorAdapter
 
 @Transactional
 class ResourceService {
@@ -56,6 +54,17 @@ class ResourceService {
             }
         }
         return trendingTopics
+    }
+
+    def fetchResourceInfo(long id) {
+        Resource resource = Resource.get(id)
+        ResourceVO resourceVO = new ResourceVO(resourceCreatorId: resource.createdBy.id, resourceCreatorName: resource.createdBy.fullName, resourceCreatorUsername: resource.createdBy.username, photo: resource.createdBy.photo, topicId: resource.topic.id, topicName: resource.topic.name, resourceId: resource.id, description: resource.description, dateCreated: resource.dateCreated, resourceClass: resource.class)
+        if (resourceVO.resourceClass == LinkResource) {
+            resourceVO.url = resource.url
+        } else {
+            resourceVO.filepath = resource.filepath
+        }
+        return resourceVO
     }
 
     def fetchTopPosts(Integer day) {

@@ -6,14 +6,15 @@
 </div>
 
 <div class="col-sm-4">
-    <g:select name="visibility" from="${Visibility.values()}" optionValue="displayText" class="form-control"
+    <g:select name="visibility" id="${topicId}" from="${Visibility.values()}" optionValue="displayText"
+              class="form-control visibility"
               value="${visibility}"/>
 </div>
 
 <div class="col-sm-3">
     <a id="sendInvitation" href="#" data-toggle="modal" data-target="#sendInvitationModal"><span
             class="fa fa-envelope-o" style="font-size: 20px;"></span></a>&nbsp;
-    <i class="fa fa-pencil-square-o" style="font-size: 20px;"></i>&nbsp;
+    <i id="editTopicName" class="fa fa-pencil-square-o" style="font-size: 20px;"></i>&nbsp;
 <g:link controller="topic" action="delete" id="${topicId}" class="glyphicon glyphicon-trash deletetopic"
         style="font-size: 20px;"></g:link>
     <br>

@@ -23,6 +23,42 @@ class UserController extends BaseController {
 
     }
 
+    def profile() {
+        User user = session.user
+        render view: 'profile', model: [user: user]
+    }
+
+    def update(UserCO userCO) {
+        bindData(userCO, params, exclude: ['photo'])
+        def photo = request.getFile('photo')
+        User user = User.get(session.user.id)
+        user.firstName = userCO.firstName
+        user.lastName = userCO.lastName
+        user.username = userCO.username
+        if (!photo && !photo.empty) {
+            user.photo = file.getBytes()
+        }
+        if (user.save(flush: true)) {
+            flash.message = "Profile Updated Successfully"
+            session.user = user
+        } else {
+            flash.error = user.errors.allErrors.collect { message(error: it) }.join(",")
+        }
+        redirect controller: 'user', action: 'profile'
+    }
+
+    def updatePassword() {
+        User user = User.get(session.user.id)
+        user.password = params.passwordField
+        if (user.save(flush: true)) {
+            flash.message = "Password Updated Successfully"
+        } else {
+            flash.error = "Please try later"
+        }
+        log.info user.errors.allErrors
+        redirect controller: 'user', action: 'profile'
+    }
+
     def logout() {
         session.invalidate()
         redirect(controller: 'user', action: 'index')
@@ -84,10 +120,40 @@ class UserController extends BaseController {
     }
 
     def list() {
-        if (session.user.admin) {
-            render view: 'list'
+        if (session.user?.admin) {
+            params.max = params.max ? params.max : 20
+            params.offset = params.offset ? params.offset : 0
+            render view: 'list', model: [users: User.list(params), userCount: User.count()]
         } else {
             redirect(uri: "/")
+        }
+    }
+
+    def topics() {
+//        render userService.fetchUserTopics(session.user)
+        String html = ls.subscribedTopics(subscribedTopics: userService.fetchUserTopics(session.user))
+        render([html: html] as JSON)
+    }
+
+    def deactivate() {
+        if (session.user.admin) {
+            User user = User.get(params.long("id"))
+            user.active = false
+            user.save(flush: true)
+            redirect controller: 'user', action: 'list'
+        } else {
+            redirect controller: 'user', action: 'index'
+        }
+    }
+
+    def activate() {
+        if (session.user.admin) {
+            User user = User.get(params.long("id"))
+            user.active = true
+            user.save(flush: true)
+            redirect controller: 'user', action: 'list'
+        } else {
+            redirect controller: 'user', action: 'index'
         }
     }
 }

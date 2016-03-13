@@ -4,8 +4,10 @@ import com.ttnd.linksharing.co.InviteCO
 import com.ttnd.linksharing.co.TopicCO
 import com.ttnd.linksharing.dto.EmailDTO
 import com.ttnd.linksharing.dto.ResponseDTO
+import com.ttnd.linksharing.vo.ResourceVO
 import com.ttnd.linksharing.vo.TopicInfoVO
 import com.ttnd.linksharing.vo.TopicVO
+import com.ttnd.linksharing.vo.UserVO
 import grails.transaction.Transactional
 import org.springframework.context.MessageSource
 
@@ -84,5 +86,35 @@ class TopicService {
             topicInfoVO.seriousness = null
         }
         return topicInfoVO
+    }
+
+    def fetchTopicUsers(long id) {
+        List<Subscription> subscriptions = Subscription.findAllByTopic(Topic.load(id))
+        List<UserVO> users = subscriptions.collect {
+            new UserVO(id: it.user.id, fullName: it.user.fullName, username: it.user.username, photo: it.user.photo, numberOfSubscriptions: it.user.subscriptions.size(), numberOfTopics: it.user.topics.size())
+        }
+        return users
+    }
+
+    def fetchTopicPosts(long id, User user) {
+        List<Resource> resources = Resource.findAllByTopic(Topic.load(id))
+        List<ResourceVO> resourceVOs = resources.collect {
+            ReadingItem readingItem = ReadingItem.findByResourceAndUser(it, user)
+            ResourceVO resourceVO = new ResourceVO(resourceCreatorId: it.createdBy.id, resourceCreatorName: it.createdBy.fullName, resourceCreatorUsername: it.createdBy.username, photo: it.createdBy.photo, topicId: it.topic.id, topicName: it.topic.name, resourceId: it.id, description: it.description, dateCreated: it.dateCreated, resourceClass: it.class)
+            if (resourceVO.resourceClass == LinkResource) {
+                resourceVO.url = it.url
+            } else {
+                resourceVO.filepath = it.filepath
+            }
+            if (readingItem) {
+                resourceVO.isRead = readingItem.isRead
+                resourceVO.readingItemId = readingItem.id
+            } else {
+                resourceVO.readingItemId = 0
+                resourceVO.isRead = false
+            }
+            return resourceVO
+        }
+        return resourceVOs
     }
 }

@@ -5,6 +5,7 @@ import com.ttnd.linksharing.co.UserCO
 import com.ttnd.linksharing.dto.EmailDTO
 import com.ttnd.linksharing.dto.ResponseDTO
 import com.ttnd.linksharing.util.Util
+import com.ttnd.linksharing.vo.SubscribedTopicVO
 import com.ttnd.linksharing.vo.UserVO
 import grails.transaction.Transactional
 import org.springframework.context.MessageSource
@@ -113,5 +114,19 @@ class UserService {
         User user1 = User.get(user.id)
         UserVO userVO = new UserVO(username: user1.username, fullName: user1.fullName, photo: user1.photo, numberOfTopics: user1.topics.size(), numberOfSubscriptions: user1.subscriptions.size())
         return userVO
+    }
+
+    def fetchUserTopics(User currentUser) {
+        List<Topic> topics = Topic.findAllByCreatedBy(currentUser)
+        List<SubscribedTopicVO> topicVOs = topics.collect {
+            SubscribedTopicVO subscribedTopicVO = new SubscribedTopicVO(topicCreatorId: it.createdBy.id, photo: it.createdBy.photo, topicCreatorUsername: it.createdBy.username, topicId: it.id, topicName: it.name, visibility: it.visibility, numberOfSubscriptions: it.subscriptions.size(), numberOfResources: it.resources.size())
+            Subscription subscription = Subscription.findByTopicAndUser(it, currentUser)
+            if (subscription) {
+                subscribedTopicVO.subscriptionId = subscription.id
+                subscribedTopicVO.seriousness = subscription.seriousness
+            }
+            return subscribedTopicVO
+        }
+        return topicVOs
     }
 }

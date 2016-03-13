@@ -47,4 +47,13 @@ class ResourceController extends BaseController {
         response.outputStream << bytes
     }
 
+    def show() {
+
+    }
+
+    def info() {
+        String html = ls.resource(resourceVO: resourceService.fetchResourceInfo(params.long("id")))
+        render([html: html] as JSON)
+    }
+
 }

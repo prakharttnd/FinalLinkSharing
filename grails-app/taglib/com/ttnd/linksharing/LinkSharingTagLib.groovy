@@ -1,10 +1,12 @@
 package com.ttnd.linksharing
 
 import com.ttnd.linksharing.vo.RecentShareVO
+import com.ttnd.linksharing.vo.ResourceVO
 import com.ttnd.linksharing.vo.SubscribedTopicVO
 import com.ttnd.linksharing.vo.TopicInfoVO
 import com.ttnd.linksharing.vo.TrendingTopicVO
 import com.ttnd.linksharing.vo.UnreadResourceVO
+import com.ttnd.linksharing.vo.UserVO
 
 class LinkSharingTagLib {
     //  static defaultEncodeAs = [taglib:'html']
@@ -99,5 +101,37 @@ class LinkSharingTagLib {
 
     def topicInfo = { attrs, body ->
         out << render(template: '/topic/topicInfoHtml', model: [topicInfoVO: attrs.topicInfoVO as TopicInfoVO])
+    }
+
+    def topicShowUsers = { attrs, body ->
+        if (attrs.users) {
+            attrs.users.each { UserVO userVO ->
+                out << render(template: "/topic/users", model: [userVO: userVO])
+            }
+        }
+    }
+
+    def topicShowPosts = { attrs, body ->
+        if (attrs.posts) {
+            attrs.posts.each { ResourceVO resourceVO ->
+                out << render(template: "/topic/post", model: [resourceVO: resourceVO])
+            }
+        }
+    }
+
+    def resource = { attrs, body ->
+        if (attrs.resourceVO) {
+            out << render(template: "/resource/resourceHtml", model: [resourceVO: attrs.resourceVO as ResourceVO])
+        }
+    }
+
+    def resourceLinks = { attrs, body ->
+        if (attrs.resourceCreatorId == session.user.id || session.user.admin) {
+            out << render(template: '/resource/resourceAdminCreatorLinks', model: [resourceId: attrs.resourceId, description: attrs.description])
+        } else {
+
+        }
+//            out << <g:link controller='resource' action='delete' id='${attrs.resourceCreatorId}'>Delete</g:link>
+
     }
 }

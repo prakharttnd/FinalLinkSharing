@@ -2,8 +2,20 @@
     <ls:renderSmallImage photo="${subscribedTopicVO.photo}"/>
     <div style="margin-left: 90px;">
         <div class="col-sm-12">
-            <strong><g:link controller="topic" action="show"
-                            id="${subscribedTopicVO.topicId}">${subscribedTopicVO.topicName}</g:link></strong>
+            <div class="hidden editTopicForm">
+                <g:form class="form-horizontal" controller="topic" action="update">
+                    <div class="col-sm-6">
+                        <g:textField name="topicName" value="${subscribedTopicVO.topicName}" class="form-control"/>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <g:submitButton name="Save" id="updateTopicName" class="btn btn-default active"/>
+                        <g:submitButton name="Cancel" id="cancelUpdate" class="btn btn-default active"/>
+                    </div>
+                </g:form>
+            </div>
+            <strong class="topicText"><g:link controller="topic" action="show"
+                                              id="${subscribedTopicVO.topicId}">${subscribedTopicVO.topicName}</g:link></strong>
             <br><br>
         </div>
 

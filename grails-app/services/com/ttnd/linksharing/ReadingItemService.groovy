@@ -9,10 +9,6 @@ class ReadingItemService {
 
     MessageSource messageSource
 
-    def serviceMethod() {
-
-    }
-
     def save(Long id, User user) {
         ResponseDTO responseDTO = new ResponseDTO()
         ReadingItem readingItem = ReadingItem.findOrSaveByUserAndResource(user, Resource.load(id))
@@ -23,6 +19,20 @@ class ReadingItemService {
         } else {
             responseDTO.status = 201
             responseDTO.message = messageSource.getMessage("resource.read.error", [].toArray(), Locale.default)
+        }
+        return responseDTO
+    }
+
+    def unread(Long id) {
+        ResponseDTO responseDTO = new ResponseDTO()
+        ReadingItem readingItem = ReadingItem.load(id)
+        readingItem.isRead = false
+        if (readingItem.save(flush: true)) {
+            responseDTO.status = 200
+            responseDTO.message = "Unread saved successfully"
+        } else {
+            responseDTO.status = 201
+            responseDTO.message = "Please try later"
         }
         return responseDTO
     }

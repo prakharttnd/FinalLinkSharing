@@ -26,6 +26,26 @@
         });
     }
 
+    var fetchTopicUsers = function () {
+        $.ajax({
+            url: '/topic/users/' + window.location.pathname.split("/")[3],
+            type: 'post',
+            success: function (response) {
+                $('#topicUsersBody').html(response.html);
+            }
+        });
+    }
+
+    var fetchTopicPosts = function () {
+        $.ajax({
+            url: '/topic/posts/' + window.location.pathname.split("/")[3],
+            type: 'post',
+            success: function (response) {
+                $('#topicPostsBody').html(response.html);
+            }
+        })
+    }
+
     $(document).on('click', '.subscribeTopic', function (event) {
         $.ajax({
             url: this.href,
@@ -33,9 +53,12 @@
             success: function (response) {
                 console.log(response)
                 if (response.status == 200) {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
+                    fetchTopicInfo();
+                    fetchTopicUsers();
+                    fetchTopicPosts();
                 } else {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 }
             }
         });
@@ -49,11 +72,14 @@
             success: function (response) {
                 console.log(response)
                 if (response.status == 200) {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
+                    fetchTopicInfo();
+                    fetchTopicUsers();
+                    fetchTopicPosts();
                 } else if (response.status == 202) {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 } else {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 }
             }
         });
@@ -74,16 +100,16 @@
             success: function (response) {
                 console.log(response)
                 if (response.status == 200) {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 } else {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 }
             }
         });
     });
 
     $(document).on('change', '.visibility', function () {
-        console.log(this)
+        console.log(this.id)
         console.log(this.value)
         var data = {
             visibility: this.value,
@@ -96,12 +122,44 @@
             success: function (response) {
                 console.log(response)
                 if (response.status == 200) {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 } else {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 }
             }
         });
+    });
+
+    $(document).on('click', '.markasread', function (event) {
+        $.ajax({
+            url: this.href,
+            type: 'post',
+            success: function (response) {
+                if (response.status == 200) {
+                    showalert(response.message);
+                    fetchTopicPosts();
+                } else {
+                    showalert(response.message);
+                }
+            }
+        });
+        event.preventDefault();
+    });
+
+    $(document).on('click', '.markasunread', function (event) {
+        $.ajax({
+            url: this.href,
+            type: 'post',
+            success: function (response) {
+                if (response.status == 200) {
+                    showalert(response.message);
+                    fetchTopicPosts();
+                } else {
+                    showalert(response.message);
+                }
+            }
+        });
+        event.preventDefault();
     });
 
     $(document).on('click', '.deletetopic', function (event) {
@@ -111,9 +169,9 @@
             success: function (response) {
                 if (response.status == 200) {
                     window.location.href = "/user/dashboard";
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 } else {
-                    $('#message-alert').html(response.message);
+                    showalert(response.message);
                 }
             }
         });
@@ -122,7 +180,8 @@
 
     window.onload = function () {
         fetchTopicInfo();
-
+        fetchTopicUsers();
+        fetchTopicPosts();
     }
 </script>
 

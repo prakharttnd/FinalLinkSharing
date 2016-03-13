@@ -5,7 +5,3 @@
         <asset:image src="spinner.gif"/> Loading...
     </div>
 </div>
-
-<script type="text/javascript">
-
-</script>

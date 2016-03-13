@@ -7,9 +7,14 @@ class ReadingItemController extends BaseController {
     def index() {}
 
     def save() {
-        long id = Long.parseLong(params.id)
         renderAsJSON {
-            readingItemService.save(id, session.user)
+            readingItemService.save(params.long("id"), session.user)
+        }
+    }
+
+    def unread() {
+        renderAsJSON {
+            readingItemService.unread(params.long("id"))
         }
     }
 }

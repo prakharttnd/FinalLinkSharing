@@ -54,8 +54,8 @@ class TopicController extends BaseController {
         }
     }
 
-    def show(Long id) {
-        String topicName = Topic.get(id)?.name
+    def show() {
+        String topicName = Topic.get(params.long("id"))?.name
         if (topicName) {
             render view: 'show', model: [topicName: topicName]
         } else {
@@ -65,12 +65,40 @@ class TopicController extends BaseController {
     }
 
     def info() {
-        Long id = Long.parseLong(params.id)
-        String html = ls.topicInfo(topicInfoVO: topicService.fetchTopicInfo(id, session.user))
+        String html = ls.topicInfo(topicInfoVO: topicService.fetchTopicInfo(params.long("id"), session.user))
         render([html: html] as JSON)
     }
 
-    def updateVisibility() {
+    def users() {
+        String html = ls.topicShowUsers(users: topicService.fetchTopicUsers(params.long("id")))
+        render([html: html] as JSON)
+    }
 
+    def posts() {
+        String html = ls.topicShowPosts(posts: topicService.fetchTopicPosts(params.long("id"), session.user))
+        render([html: html] as JSON)
+    }
+
+    def update() {
+        ResponseDTO responseDTO = new ResponseDTO()
+        String topicName = params.name
+        String visibility = params.visibility
+        long id = params.long("topicId")
+        if (topicName) {
+
+        } else if (visibility) {
+            Topic topic = Topic.get(id)
+            topic.visibility = visibility
+            if (topic.save(flush: true)) {
+                responseDTO.status = 200
+                responseDTO.message = "Visibility changed to " + visibility
+            } else {
+                responseDTO.status = 201
+                responseDTO.message = "Please try later"
+            }
+        }
+        renderAsJSON {
+            responseDTO
+        }
     }
 }

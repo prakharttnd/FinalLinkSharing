@@ -1,6 +1,5 @@
 package com.ttnd.linksharing
 
-import com.ttnd.linksharing.co.SearchCO
 import com.ttnd.linksharing.co.UnreadResourceSearchCO
 import com.ttnd.linksharing.vo.UnreadResourceVO
 

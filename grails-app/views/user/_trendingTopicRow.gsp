@@ -46,8 +46,9 @@
 
     <div class="col-sm-4">
         <g:if test="${(session.user.admin || (trendingTopicVO.topicCreatorId == session.user.id))}">
-            <g:select name="visibility" from="${com.ttnd.linksharing.enums.Visibility.values()}"
-                      optionValue="displayText" value="${trendingTopicVO.visibility}" class="form-control"/>
+            <g:select name="visibility" id="${trendingTopicVO.topicId}"
+                      from="${com.ttnd.linksharing.enums.Visibility.values()}"
+                      optionValue="displayText" value="${trendingTopicVO.visibility}" class="form-control visibility"/>
         </g:if>
     </div>
 

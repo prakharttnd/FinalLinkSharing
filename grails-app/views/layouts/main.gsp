@@ -51,7 +51,7 @@
                                 style="font-size: 20px;"></span> ${session.user?.username} <span
                                 class="caret"/></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Profile</a></li>
+                                <li><a href="/user/profile">Profile</a></li>
                                 <g:if test="${session.user?.admin}">
                                     <li><a href="/user/list">Users</a></li>
                                 </g:if>
@@ -186,9 +186,17 @@
         $("#error-alert").alert('close');
     });
 
-    $("#message-alert").fadeTo(2000, 500).slideUp(500, function () {
-        $("#message-alert").alert('close');
-    });
+    var showalert = function (message) {
+        $("#message").html("<div class='alert alert-warning" +
+                "' id='message-alert'>" + message + "</div>");
+        closealert();
+    }
+
+    var closealert = function () {
+        $("#message-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#message-alert").alert('close');
+        });
+    }
 </script>
 </body>
 </html>

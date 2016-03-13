@@ -6,4 +6,5 @@ class UserVO {
     String numberOfTopics
     String username
     byte[] photo
+    Integer id
 }
