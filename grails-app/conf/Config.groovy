@@ -110,7 +110,7 @@ log4j.main = {
         appender new DailyRollingFileAppender(
                 name: 'utilControllerAppender',
                 datePattern: "'_'dd-MM-yyyy",
-                fileName: "/home/prakhar/myLog.log",  //storage path of log file
+                fileName: "${userHome}/myLog.log",  //storage path of log file
                 layout: pattern(conversionPattern: '%d [%t] %-5p %X{authToken} %c{2} %x - %m%n'))
     }
 
