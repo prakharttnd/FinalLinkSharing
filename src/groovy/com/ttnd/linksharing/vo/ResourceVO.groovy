@@ -15,4 +15,5 @@ class ResourceVO {
     String filepath
     boolean isRead
     Integer readingItemId
+    Integer score
 }

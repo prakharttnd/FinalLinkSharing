@@ -5,10 +5,12 @@ import com.ttnd.linksharing.co.TopicCO
 import com.ttnd.linksharing.dto.ResponseDTO
 import com.ttnd.linksharing.vo.TopicVO
 import grails.converters.JSON
+import org.springframework.context.MessageSource
 
 class TopicController extends BaseController {
 
     def topicService
+    MessageSource messageSource
 
     def index() {}
 
@@ -17,7 +19,6 @@ class TopicController extends BaseController {
     }
 
     def renderSendInvitationTemplate() {
-        log.info "sdjhbsjdbjsddbvjsdbvjhbsdjvbjb"
         List<TopicVO> subscribedTopics = topicService.fetchSubscribedTopic(session.user)
         render template: 'invite', model: [subscribedTopics: subscribedTopics]
     }
@@ -81,11 +82,19 @@ class TopicController extends BaseController {
 
     def update() {
         ResponseDTO responseDTO = new ResponseDTO()
-        String topicName = params.name
+        String topicName = params.topicName
         String visibility = params.visibility
         long id = params.long("topicId")
         if (topicName) {
-
+            Topic topic = Topic.get(id)
+            topic.name = topicName
+            if (topic.save(flush: true)) {
+                responseDTO.status = 200
+                responseDTO.message = "Topic name changed to ${topicName}"
+            } else {
+                responseDTO.status = 201
+                responseDTO.message = messageSource.getMessage("com.ttnd.linksharing.Topic.name.unique.error", [].toArray(), Locale.default)
+            }
         } else if (visibility) {
             Topic topic = Topic.get(id)
             topic.visibility = visibility

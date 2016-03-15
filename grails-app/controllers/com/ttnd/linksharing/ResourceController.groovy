@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import com.ttnd.linksharing.co.UnreadResourceSearchCO
+import com.ttnd.linksharing.dto.ResponseDTO
 import grails.converters.JSON
 
 class ResourceController extends BaseController {
@@ -51,8 +52,43 @@ class ResourceController extends BaseController {
 
     }
 
+    def delete() {
+        long id = params.long("id")
+        ResponseDTO responseDTO = new ResponseDTO()
+        Resource resource = Resource.load(id)
+        try {
+            resource.delete(flush: true)
+            responseDTO.status = 200
+            responseDTO.message = "Resource Deleted successfully"
+        } catch (Exception e) {
+            responseDTO.status = 201
+            responseDTO.message = "Please try later"
+        }
+        renderAsJSON {
+            responseDTO
+        }
+    }
+
+    def update() {
+        ResponseDTO responseDTO = new ResponseDTO()
+        long id = params.long("id")
+        String description = params.description
+        Resource resource = Resource.get(id)
+        resource.description = description
+        if (resource.save(flush: true)) {
+            responseDTO.status = 200
+            responseDTO.message = "Description updated successfully"
+        } else {
+            responseDTO.status = 200
+            responseDTO.message = "Please try later"
+        }
+        renderAsJSON {
+            responseDTO
+        }
+    }
+
     def info() {
-        String html = ls.resource(resourceVO: resourceService.fetchResourceInfo(params.long("id")))
+        String html = ls.resource(resourceVO: resourceService.fetchResourceInfo(params.long("id"), session.user))
         render([html: html] as JSON)
     }
 

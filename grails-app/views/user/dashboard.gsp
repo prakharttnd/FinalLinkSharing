@@ -179,11 +179,77 @@
             });
         });
 
-//        $(document).on('click', "#editTopicName", function () {
-//            console.log(this.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1])
-//            this.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[1].removeClass("hidden");
-//            $(".topicText").toggleClass("hidden");
-//        });
+        $(document).on('click', ".editTopicName", function () {
+            $("#subscriptionTopicForm" + this.id).toggleClass("hidden");
+            $("#subscriptionTopicText" + this.id).toggleClass("hidden");
+        });
+
+        $(document).on('click', ".editTrendingTopicName", function () {
+            $("#trendingTopicForm" + this.id).toggleClass("hidden");
+            $("#trendingTopicText" + this.id).toggleClass("hidden");
+        });
+
+        $(document).on('click', ".subscriptionTopicNameSubmitUpdate", function (event) {
+            var id = this.id;
+            var name = $("#subscriptionTopicName" + id).val();
+            var data = {
+                topicName: name,
+                topicId: id
+            }
+            $.ajax({
+                url: '/topic/update/' + id,
+                type: 'post',
+                data: data,
+                success: function (response) {
+                    if (response.status == 200) {
+                        fetchSubscriptions();
+                        fetchTrendingTopics();
+                        fetchUnreadResources();
+                        showalert(response.message)
+                    } else {
+                        showalert(response.message)
+                    }
+                }
+            });
+            event.preventDefault();
+        });
+
+        $(document).on('click', ".trendingTopicNameSubmitUpdate", function (event) {
+            var id = this.id;
+            var name = $("#trendingTopicName" + id).val();
+            var data = {
+                topicName: name,
+                topicId: id
+            }
+            $.ajax({
+                url: '/topic/update/' + id,
+                type: 'post',
+                data: data,
+                success: function (response) {
+                    if (response.status == 200) {
+                        fetchSubscriptions();
+                        fetchTrendingTopics();
+                        fetchUnreadResources();
+                        showalert(response.message)
+                    } else {
+                        showalert(response.message)
+                    }
+                }
+            });
+            event.preventDefault();
+        });
+
+        $(document).on('click', ".subscriptionTopicNameCancelUpdate", function (event) {
+            $("#subscriptionTopicForm" + this.id).toggleClass("hidden");
+            $("#subscriptionTopicText" + this.id).toggleClass("hidden");
+            event.preventDefault();
+        });
+
+        $(document).on('click', ".trendingTopicNameCancelUpdate", function (event) {
+            $("#trendingTopicForm" + this.id).toggleClass("hidden");
+            $("#trendingTopicText" + this.id).toggleClass("hidden");
+            event.preventDefault();
+        });
 
         window.onload = function () {
             fetchUserInfo();

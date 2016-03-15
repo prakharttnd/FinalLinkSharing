@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import com.ttnd.linksharing.co.LoginCO
 import com.ttnd.linksharing.co.UserCO
+import com.ttnd.linksharing.co.UserSearchCO
 import com.ttnd.linksharing.dto.ResponseDTO
 import com.ttnd.linksharing.vo.RecentShareVO
 import com.ttnd.linksharing.vo.UserVO
@@ -119,41 +120,33 @@ class UserController extends BaseController {
         render([html: html] as JSON)
     }
 
-    def list() {
+    def list(UserSearchCO userSearchCO) {
+        log.info "<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>"
+        log.info userSearchCO.properties
+        log.info "<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>"
         if (session.user?.admin) {
-            params.max = params.max ? params.max : 20
-            params.offset = params.offset ? params.offset : 0
-            render view: 'list', model: [users: User.list(params), userCount: User.count()]
+            List<User> users = User.search(userSearchCO).list(max: userSearchCO.max, offset: userSearchCO.offset, order: userSearchCO.order, sort: userSearchCO.sort)
+            render view: '/user/list', model: [users: users, userCount: User.count()]
         } else {
             redirect(uri: "/")
         }
+    }
+
+    def toogleActive() {
+        long id = params.long("id")
+        User user = User.get(id)
+        if (user.active) {
+            user.active = false
+        } else {
+            user.active = true
+        }
+        user.save(flush: true)
+        redirect(controller: 'user', action: 'list')
     }
 
     def topics() {
 //        render userService.fetchUserTopics(session.user)
         String html = ls.subscribedTopics(subscribedTopics: userService.fetchUserTopics(session.user))
         render([html: html] as JSON)
-    }
-
-    def deactivate() {
-        if (session.user.admin) {
-            User user = User.get(params.long("id"))
-            user.active = false
-            user.save(flush: true)
-            redirect controller: 'user', action: 'list'
-        } else {
-            redirect controller: 'user', action: 'index'
-        }
-    }
-
-    def activate() {
-        if (session.user.admin) {
-            User user = User.get(params.long("id"))
-            user.active = true
-            user.save(flush: true)
-            redirect controller: 'user', action: 'list'
-        } else {
-            redirect controller: 'user', action: 'index'
-        }
     }
 }

@@ -2,20 +2,24 @@
     <ls:renderSmallImage photo="${subscribedTopicVO.photo}"/>
     <div style="margin-left: 90px;">
         <div class="col-sm-12">
-            <div class="hidden editTopicForm">
+            <div class="hidden" id="subscriptionTopicForm${subscribedTopicVO.topicId}">
                 <g:form class="form-horizontal" controller="topic" action="update">
                     <div class="col-sm-6">
-                        <g:textField name="topicName" value="${subscribedTopicVO.topicName}" class="form-control"/>
+                        <g:textField name="subscriptionTopicName${subscribedTopicVO.topicId}" value="${subscribedTopicVO.topicName}"
+                                     class="form-control" required="required"/>
                     </div>
 
                     <div class="col-sm-6">
-                        <g:submitButton name="Save" id="updateTopicName" class="btn btn-default active"/>
-                        <g:submitButton name="Cancel" id="cancelUpdate" class="btn btn-default active"/>
+                        <g:submitButton name="Save" id="${subscribedTopicVO.topicId}"
+                                        class="btn btn-default active subscriptionTopicNameSubmitUpdate"/>
+                        <g:submitButton name="Cancel" id="${subscribedTopicVO.topicId}"
+                                        class="btn btn-default active subscriptionTopicNameCancelUpdate"/>
                     </div>
                 </g:form>
             </div>
-            <strong class="topicText"><g:link controller="topic" action="show"
-                                              id="${subscribedTopicVO.topicId}">${subscribedTopicVO.topicName}</g:link></strong>
+            <strong id="subscriptionTopicText${subscribedTopicVO.topicId}"><g:link controller="topic" action="show"
+                                                                                   id="${subscribedTopicVO.topicId}"
+                                                                                   class="showTopicName${subscribedTopicVO.topicId}">${subscribedTopicVO.topicName}</g:link></strong>
             <br><br>
         </div>
 

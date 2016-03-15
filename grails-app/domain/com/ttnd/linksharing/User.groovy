@@ -1,6 +1,8 @@
 package com.ttnd.linksharing
 
 import com.ttnd.linksharing.co.UnreadResourceSearchCO
+import com.ttnd.linksharing.co.UserSearchCO
+import com.ttnd.linksharing.enums.UserStatus
 import com.ttnd.linksharing.vo.UnreadResourceVO
 
 class User {
@@ -64,5 +66,23 @@ class User {
 
     String toString() {
         return "Name: ${getFullName()}, Username: $username, Email: $email"
+    }
+
+    static namedQueries = {
+        search { UserSearchCO userSearchCO ->
+            if (userSearchCO.q) {
+                or {
+                    ilike('firstName', "%${userSearchCO.q}%")
+                    ilike('lastName', "%${userSearchCO.q}%")
+                    ilike('username', "%${userSearchCO.q}%")
+                    ilike('email', "%${userSearchCO.q}%")
+                }
+                if (userSearchCO.isActive == UserStatus.ACTIVE) {
+                    eq('active', true)
+                } else if (userSearchCO.isActive == UserStatus.INACTIVE) {
+                    eq('active', false)
+                }
+            }
+        }
     }
 }

@@ -156,12 +156,6 @@
                 });
             });
 
-            //            $('#sendInvitation').click(function () {
-            //                $.post("/topic/renderSendInvitationTemplate", function (response) {
-            //                    $('#sendInvitationModalBody').html(response);
-            //                });
-            //            });
-
             $('#createLinkResource').click(function () {
                 $.post("/linkResource/renderCreateLinkResourceTemplate", function (response) {
                     $('#createLinkResourceModalBody').html(response);

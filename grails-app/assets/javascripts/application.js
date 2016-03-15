@@ -8,6 +8,7 @@
 //= require jquery
 //= require bootstrap.min
 //= require jquery.validation.min
+//= require bootstrap-star-rating
 //= require_tree .
 //= require_self
 

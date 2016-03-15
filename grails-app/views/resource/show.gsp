@@ -103,10 +103,7 @@
                 success: function (response) {
                     if (response.status == 200) {
                         showalert(response.message);
-                        fetchUserInfo();
-                        fetchSubscriptions();
                         fetchTrendingTopics();
-                        fetchUnreadResources();
                     } else {
                         showalert(response.message);
                     }
@@ -137,9 +134,66 @@
             });
         });
 
+        $(document).on('click', ".deleteResource", function (event) {
+            $.ajax({
+                url: this.href,
+                type: 'post',
+                success: function (response) {
+                    console.log(response)
+                    if (response.status == 200) {
+                        showalert(response.message);
+                        window.location.href = "/";
+                    } else {
+                        showalert(response.message);
+                    }
+                }
+            });
+            event.preventDefault();
+        });
+
+        $(document).on('click', ".trendingTopicNameCancelUpdate", function (event) {
+            $("#trendingTopicForm" + this.id).toggleClass("hidden");
+            $("#trendingTopicText" + this.id).toggleClass("hidden");
+            event.preventDefault();
+        });
+
+        $(document).on('click', ".trendingTopicNameSubmitUpdate", function (event) {
+            var id = this.id;
+            var name = $("#trendingTopicName" + id).val();
+            var data = {
+                topicName: name,
+                topicId: id
+            }
+            $.ajax({
+                url: '/topic/update/' + id,
+                type: 'post',
+                data: data,
+                success: function (response) {
+                    if (response.status == 200) {
+                        fetchTrendingTopics();
+                        showalert(response.message)
+                    } else {
+                        showalert(response.message)
+                    }
+                }
+            });
+            event.preventDefault();
+        });
+
+        $(document).on('click', ".editTrendingTopicName", function () {
+            $("#trendingTopicForm" + this.id).toggleClass("hidden");
+            $("#trendingTopicText" + this.id).toggleClass("hidden");
+        });
+
         window.onload = function () {
             fetchTrendingTopics();
             fetchResourceInfo();
+            $("#stars-default").rating();
+            $("#stars-green").rating('create', {
+                coloron: 'green', onClick: function () {
+                    alert('rating is ' + this.attr('data-rating'));
+                }
+            });
         }
     });
 </script>

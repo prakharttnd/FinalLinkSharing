@@ -56,13 +56,19 @@ class ResourceService {
         return trendingTopics
     }
 
-    def fetchResourceInfo(long id) {
+    def fetchResourceInfo(long id, User user) {
         Resource resource = Resource.get(id)
+        ResourceRating resourceRating = ResourceRating.findByCreatedByAndResource(user, resource)
         ResourceVO resourceVO = new ResourceVO(resourceCreatorId: resource.createdBy.id, resourceCreatorName: resource.createdBy.fullName, resourceCreatorUsername: resource.createdBy.username, photo: resource.createdBy.photo, topicId: resource.topic.id, topicName: resource.topic.name, resourceId: resource.id, description: resource.description, dateCreated: resource.dateCreated, resourceClass: resource.class)
         if (resourceVO.resourceClass == LinkResource) {
             resourceVO.url = resource.url
         } else {
             resourceVO.filepath = resource.filepath
+        }
+        if (resourceRating) {
+            resourceVO.score = resourceRating.score
+        } else {
+            resourceVO.score = 1
         }
         return resourceVO
     }

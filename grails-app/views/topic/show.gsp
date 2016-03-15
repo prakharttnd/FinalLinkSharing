@@ -178,10 +178,45 @@
         event.preventDefault();
     });
 
+    $(document).on('click', ".editTopicName", function () {
+        $("#topicForm" + this.id).toggleClass("hidden");
+        $("#topicText" + this.id).toggleClass("hidden");
+    });
+
+    $(document).on('click', ".submitUpdate", function (event) {
+        var id = this.id;
+        var name = $("#topicName" + id).val();
+        var data = {
+            topicName: name,
+            topicId: id
+        }
+        $.ajax({
+            url: '/topic/update/' + id,
+            type: 'post',
+            data: data,
+            success: function (response) {
+                if (response.status == 200) {
+                    fetchTopicInfo();
+                    fetchTopicPosts();
+                    showalert(response.message)
+                } else {
+                    showalert(response.message)
+                }
+            }
+        });
+        event.preventDefault();
+    });
+
+    $(document).on('click', ".cancelUpdate", function (event) {
+        $("#topicForm" + this.id).toggleClass("hidden");
+        $("#topicText" + this.id).toggleClass("hidden");
+        event.preventDefault();
+    });
+
     window.onload = function () {
         fetchTopicInfo();
-        fetchTopicUsers();
         fetchTopicPosts();
+        fetchTopicUsers();
     }
 </script>
 

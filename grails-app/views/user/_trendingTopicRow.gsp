@@ -2,9 +2,24 @@
     <ls:renderSmallImage photo="${trendingTopicVO.photo}"/>
     <div style="margin-left: 90px;">
         <div class="col-sm-12">
-            <strong><g:link controller="topic" action="show"
-                            id="${trendingTopicVO.topicId}">${trendingTopicVO.topicName}</g:link></strong>
-            <br><br>
+            <div class="hidden" id="trendingTopicForm${trendingTopicVO.topicId}">
+                <g:form class="form-horizontal" controller="topic" action="update">
+                    <div class="col-sm-6">
+                        <g:textField name="trendingTopicName${trendingTopicVO.topicId}"
+                                     value="${trendingTopicVO.topicName}"
+                                     class="form-control" required="required"/>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <g:submitButton name="Save" id="${trendingTopicVO.topicId}"
+                                        class="btn btn-default active trendingTopicNameSubmitUpdate"/>
+                        <g:submitButton name="Cancel" id="${trendingTopicVO.topicId}"
+                                        class="btn btn-default active trendingTopicNameCancelUpdate"/>
+                    </div>
+                </g:form>
+            </div>
+            <strong id="trendingTopicText${trendingTopicVO.topicId}"><g:link controller="topic" action="show"
+                                                                             id="${trendingTopicVO.topicId}">${trendingTopicVO.topicName}</g:link></strong><br><br>
         </div>
 
         <div class="col-xs-4">
@@ -56,7 +71,8 @@
         <a id="sendInvitation" href="#" data-toggle="modal" data-target="#sendInvitationModal"><span
                 class="fa fa-envelope-o" style="font-size: 20px;"></span></a>&nbsp;
         <g:if test="${(session.user.admin || (trendingTopicVO.topicCreatorId == session.user.id))}">
-            <i class="fa fa-pencil-square-o" style="font-size: 20px;"></i>&nbsp;
+            <i class="fa fa-pencil-square-o editTrendingTopicName" id="${trendingTopicVO.topicId}"
+               style="font-size: 20px;"></i>&nbsp;
             <g:link controller="topic" action="delete" id="${trendingTopicVO.topicId}"
                     class="glyphicon glyphicon-trash deletetopic"
                     style="font-size: 20px;"></g:link>
