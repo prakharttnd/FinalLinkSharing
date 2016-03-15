@@ -11,9 +11,7 @@ class TopicController extends BaseController {
 
     def topicService
     MessageSource messageSource
-
-    def index() {}
-
+    
     def renderCreateTopicTemplate() {
         render template: 'create'
     }

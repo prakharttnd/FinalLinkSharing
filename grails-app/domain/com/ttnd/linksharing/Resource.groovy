@@ -1,7 +1,6 @@
 package com.ttnd.linksharing
 
 import com.ttnd.linksharing.co.ResourceSearchCO
-import com.ttnd.linksharing.co.SearchCO
 import com.ttnd.linksharing.enums.Visibility
 
 abstract class Resource {
@@ -24,6 +23,10 @@ abstract class Resource {
         description nullable: false, blank: false
     }
 
+    String toString() {
+        return "Id: $id"
+    }
+
     static namedQueries = {
 //        search { SearchCO co ->
 //            if (co.q) {
@@ -34,10 +37,10 @@ abstract class Resource {
 
         search { ResourceSearchCO resourceSearchCO ->
             if (resourceSearchCO.q) {
-                or{
+                or {
                     ilike("description", "%${resourceSearchCO.q}%")
-                    'topic'{
-                        ilike('name',"%%${resourceSearchCO.q}")
+                    'topic' {
+                        ilike('name', "%%${resourceSearchCO.q}")
                     }
                 }
             }

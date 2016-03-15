@@ -1,13 +1,10 @@
 package com.ttnd.linksharing
 
 import com.ttnd.linksharing.dto.ResponseDTO
-import grails.converters.JSON
 
 class ReadingItemController extends BaseController {
 
     def readingItemService
-
-    def index() {}
 
     def save() {
         renderAsJSON {

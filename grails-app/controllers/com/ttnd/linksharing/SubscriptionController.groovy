@@ -8,8 +8,6 @@ class SubscriptionController extends BaseController {
 
     def subscriptionService
 
-    def index() {}
-
     def subscribedTopics() {
         String html = ls.subscribedTopics(subscribedTopics: subscriptionService.subscribedTopics(session.user))
         render([html: html] as JSON)

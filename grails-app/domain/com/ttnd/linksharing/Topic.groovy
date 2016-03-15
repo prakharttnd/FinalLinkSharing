@@ -1,13 +1,9 @@
 package com.ttnd.linksharing
 
-import com.ttnd.linksharing.co.SubscriptionCO
-import com.ttnd.linksharing.dto.ResponseDTO
 import com.ttnd.linksharing.enums.Seriousness
 import com.ttnd.linksharing.enums.Visibility
 
 class Topic {
-
-    def subscriptionService
 
     String name
     Visibility visibility
@@ -31,13 +27,11 @@ class Topic {
 
     def afterInsert() {
         Topic.withNewSession {
-            SubscriptionCO subscriptionCO = new SubscriptionCO(user: this.createdBy, topic: this, seriousness: Seriousness.VERY_SERIOUS)
-            ResponseDTO responseDTO = subscriptionService.save(subscriptionCO)
-            if (responseDTO.status == 200) {
-                log.info "User subscribed successfully with parameters $subscriptionCO.properties"
+            Subscription subscription = new Subscription(user: this.createdBy, topic: this, seriousness: Seriousness.VERY_SERIOUS)
+            if (subscription.save(flush: true)) {
+                log.info "User subscribed successfully"
             } else {
-                log.info "Error saving subscription for user with " +
-                        "parameters $subscriptionCO.properties and error $responseDTO.message"
+                log.info "Error saving subscription"
             }
         }
     }

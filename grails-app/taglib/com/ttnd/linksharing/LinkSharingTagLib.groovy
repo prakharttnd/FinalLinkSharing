@@ -128,10 +128,7 @@ class LinkSharingTagLib {
     def resourceLinks = { attrs, body ->
         if (attrs.resourceCreatorId == session.user.id || session.user.admin) {
             out << render(template: '/resource/resourceAdminCreatorLinks', model: [resourceId: attrs.resourceId, description: attrs.description])
-        } else {
-
         }
-//            out << <g:link controller='resource' action='delete' id='${attrs.resourceCreatorId}'>Delete</g:link>
 
     }
 
