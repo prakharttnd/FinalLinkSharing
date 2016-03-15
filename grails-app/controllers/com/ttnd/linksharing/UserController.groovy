@@ -10,6 +10,8 @@ import grails.converters.JSON
 
 class UserController extends BaseController {
 
+//    static allowedMethods = [search: ['POST']]
+
     def userService
     def resourceService
 
@@ -148,5 +150,14 @@ class UserController extends BaseController {
 //        render userService.fetchUserTopics(session.user)
         String html = ls.subscribedTopics(subscribedTopics: userService.fetchUserTopics(session.user))
         render([html: html] as JSON)
+    }
+
+    def search() {
+        if (request.getMethod() == 'POST') {
+            String search = params.search
+            render(view: 'search', model: [search: search])
+        } else {
+            redirect(uri: "/")
+        }
     }
 }

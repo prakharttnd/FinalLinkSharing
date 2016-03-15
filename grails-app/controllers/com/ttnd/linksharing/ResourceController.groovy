@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import com.ttnd.linksharing.co.ResourceSearchCO
 import com.ttnd.linksharing.co.UnreadResourceSearchCO
 import com.ttnd.linksharing.dto.ResponseDTO
 import grails.converters.JSON
@@ -50,6 +51,7 @@ class ResourceController extends BaseController {
 
     def show() {
 
+
     }
 
     def delete() {
@@ -89,6 +91,12 @@ class ResourceController extends BaseController {
 
     def info() {
         String html = ls.resource(resourceVO: resourceService.fetchResourceInfo(params.long("id"), session.user))
+        render([html: html] as JSON)
+    }
+
+    def search(ResourceSearchCO resourceSearchCO) {
+        List<Resource> resources = Resource.search(resourceSearchCO).list()
+        String html = ls.searchResource(resources: resources)
         render([html: html] as JSON)
     }
 

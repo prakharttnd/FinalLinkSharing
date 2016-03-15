@@ -134,4 +134,25 @@ class LinkSharingTagLib {
 //            out << <g:link controller='resource' action='delete' id='${attrs.resourceCreatorId}'>Delete</g:link>
 
     }
+
+    def searchResource = { attrs, body ->
+        if (attrs.resources) {
+            attrs.resources.each { Resource resource ->
+                out << render(template: '/resource/searchRow', model: [resource: resource])
+            }
+        }
+    }
+
+    def markAsReadOrUnreadLink = { attrs, body ->
+        if (attrs.id) {
+            ReadingItem item = ReadingItem.findByResourceAndUser(Resource.load(attrs.id), session.user)
+            if (item) {
+                if (item.isRead) {
+                    out << "<a href='/readingItem/toggleReadUnread/${attrs.id}' class='toggleReadUnread'>Mark as Unread</a>"
+                } else {
+                    out << "<a href='/readingItem/toggleReadUnread/${attrs.id}' class='toggleReadUnread'>Mark as Read</a>"
+                }
+            }
+        }
+    }
 }
