@@ -153,8 +153,8 @@ codenarc {
     }
 }
 
-grails.mail.overrideAddress = "prakharmittal95@gmail.com"
+//grails.mail.overrideAddress = "prakharmittal95@gmail.com"
 
 applicationUrl = 'http://localhost:8080/'
 
-serverURL = "/home/prakhar/Desktop/linksharingdocs/"
+serverURL = "${userHome}/linksharingdocs/"

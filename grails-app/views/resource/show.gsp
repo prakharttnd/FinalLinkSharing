@@ -171,9 +171,9 @@
                 success: function (response) {
                     if (response.status == 200) {
                         fetchTrendingTopics();
-                        showalert(response.message)
+                        showalert(response.message);
                     } else {
-                        showalert(response.message)
+                        showalert(response.message);
                     }
                 }
             });

@@ -10,7 +10,7 @@ class ReadingItem {
     Date dateCreated
     Date lastUpdated
 
-    static belongsTo = [linkResource: LinkResource, documentResource: DocumentResource, user: User]
+    static belongsTo = [resource: Resource, user: User]
 
     static constraints = {
         user nullable: false

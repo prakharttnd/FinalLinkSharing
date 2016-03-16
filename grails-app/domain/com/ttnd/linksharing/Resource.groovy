@@ -13,6 +13,8 @@ abstract class Resource {
 
     static belongsTo = [topic: Topic, createdBy: User]
 
+    static hasMany = [resourceRatings: ResourceRating, readingItems: ReadingItem]
+
     static mapping = {
         description type: 'text'
     }

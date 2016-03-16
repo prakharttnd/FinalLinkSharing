@@ -79,6 +79,9 @@
             if (response.status == 200) {
                 $("#createTopicForm").trigger('reset');
                 $("#responseMessage").addClass("success").html(response.message);
+                setTimeout(function () {
+                    $('#createTopicModal').modal('hide');
+                }, 1000);
             } else {
                 $("#responseMessage").addClass("error").html(response.message);
             }

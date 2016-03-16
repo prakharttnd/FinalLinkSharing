@@ -11,7 +11,7 @@ class TopicController extends BaseController {
 
     def topicService
     MessageSource messageSource
-    
+
     def renderCreateTopicTemplate() {
         render template: 'create'
     }
@@ -38,8 +38,10 @@ class TopicController extends BaseController {
         try {
             topic.delete(flush: true)
             responseDTO.status = 200
+            responseDTO.message = "Topic deleted successfully"
         } catch (Exception e) {
             responseDTO.status = 201
+            responseDTO.message = "Please try later"
         }
         renderAsJSON {
             responseDTO

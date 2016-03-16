@@ -78,6 +78,9 @@
             if (response.status == 200) {
                 $("#inviteTopicForm").trigger('reset');
                 $("#responseMessage").addClass("success").html(response.message);
+                setTimeout(function () {
+                    $('#sendInvitationModal').modal('hide');
+                }, 1000);
             } else {
                 $("#responseMessage").addClass("error").html(response.message);
             }

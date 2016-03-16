@@ -98,6 +98,9 @@
             if (response.status == 200) {
                 $("#createResourceForm").trigger('reset');
                 $("#responseMessage").addClass("success").html(response.message);
+                setTimeout(function () {
+                    $('#createDocumentResourceModal').modal('hide');
+                }, 1000);
             } else {
                 $("#responseMessage").addClass("error").html(response.message);
             }

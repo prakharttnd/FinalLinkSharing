@@ -4,10 +4,6 @@ class DocumentResource extends Resource {
 
     String filepath
 
-    static hasMany = [resourceRatings: ResourceRating, readingItem: ReadingItem]
-
-    static belongsTo = [createdBy: User, topic: Topic]
-
     static constraints = {
         filepath nullable: false, blank: false
     }

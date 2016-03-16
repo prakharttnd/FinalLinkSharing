@@ -68,6 +68,9 @@
             if (response.status == 200) {
                 $("#forgetPasswordForm").trigger('reset');
                 $("#responseMessage").addClass("success").html(response.message);
+                setTimeout(function () {
+                    $('#forgetPasswordModal').modal('hide');
+                }, 1000);
             } else {
                 $("#forgetPasswordForm").trigger('reset');
                 $("#responseMessage").addClass("error").html(response.message);

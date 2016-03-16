@@ -4,6 +4,16 @@ class ApplicationFilters {
 
     def filters = {
 
+        loggingparams(controller: '*', action: '*') {
+            before = {
+                log.info "<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>"
+                log.info controllerName
+                log.info actionName
+                log.info params
+                log.info "<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>"
+            }
+        }
+
         all(controller: '*', action: '*', controllerExclude: 'user') {
             before = {
                 if (!session.user && !controllerName.equals("base")) {
@@ -30,6 +40,16 @@ class ApplicationFilters {
             before = {
                 if (!session.user) {
                     redirect(controller: 'user', action: 'index')
+                }
+            }
+        }
+
+        consoleAccessbyAdmin(controller: 'console', action: '*') {
+            before = {
+                if (session.user) {
+                    if (!session.user.admin) {
+                        redirect(uri: '/')
+                    }
                 }
             }
         }

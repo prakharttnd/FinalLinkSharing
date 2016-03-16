@@ -4,7 +4,7 @@ dataSource {
     driverClassName = "com.mysql.jdbc.Driver"
     username = "root"
     password = "root"
-    loggingSql = true
+//    loggingSql = true
 }
 hibernate {
     cache.use_second_level_cache = true

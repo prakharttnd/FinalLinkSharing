@@ -157,6 +157,9 @@
             $("#saving").toggleClass("hidden");
             if (response.status == 200) {
                 $("#responseMessage").addClass("success").html(response.message);
+                setTimeout(function () {
+                    $('#editDescriptionModal').modal('hide');
+                }, 1000);
             } else {
                 $("#responseMessage").addClass("error").html(response.message);
             }
