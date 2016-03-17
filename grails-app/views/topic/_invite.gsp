@@ -44,8 +44,8 @@
                 emailField: {
                     required: true,
                     blank: true,
-                    email: true,
-                    remote: '/base/isEmailExists'
+                    email: true
+                    //                    remote: '/base/isEmailExists'
                 },
                 topic: {
                     required: true
@@ -53,8 +53,9 @@
             },
             messages: {
                 emailField: {
-                    blank: jQuery.validator.format("Email should not be blank"),
-                    remote: jQuery.validator.format("No user with email {0}")
+                    blank: jQuery.validator.format("Email should not be blank")
+//                    ,
+//                    remote: jQuery.validator.format("No user with email {0}")
                 }
             },
             submitHandler: function (form) {

@@ -64,7 +64,7 @@ class TopicService {
             List<String> to = [inviteCO.email]
             String subject = messageSource.getMessage("topic.invite.email.subject", topicName.tokenize("").toArray(), Locale.default)
             String view = "/email/_invite"
-            String inviteLink = grailsApplication.config.applicationUrl + "topic/join/" + inviteCO.topic
+            String inviteLink = grailsApplication.config.applicationUrl + "topic/show/" + inviteCO.topic
             Map model = ['topicName': topicName, 'senderName': inviteCO.senderName, 'inviteLink': inviteLink]
             EmailDTO emailDTO = new EmailDTO(to: to, subject: subject, view: view, model: model)
             emailService.sendMail(emailDTO)

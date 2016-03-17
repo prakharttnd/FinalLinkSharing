@@ -8,6 +8,9 @@ import com.ttnd.linksharing.vo.TrendingTopicVO
 import com.ttnd.linksharing.vo.UnreadResourceVO
 import com.ttnd.linksharing.vo.UserVO
 
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
+
 class LinkSharingTagLib {
     //  static defaultEncodeAs = [taglib:'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
@@ -51,6 +54,9 @@ class LinkSharingTagLib {
         if (!attrs.photo) {
             String src = assetPath(src: 'defaultimage.jpg')
             out << "<img src='$src' class='img-rounded' height='100px;' width='100px;' alt='dp' style='float: left;'>"
+        } else {
+            out << "<img id='imagepreview' src=''/>"
+            out << "<script>document.getElementById('imagepreview').src= 'data:image/jpg;' + ${attrs.photo};</script>"
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -9,12 +10,18 @@ import spock.lang.Specification
 @TestFor(BaseController)
 class BaseControllerSpec extends Specification {
 
-    def setup() {
+    def "Test to validate isEmailExists action"() {
+        setup:
+        BaseService baseService = Mock(BaseService)
+        baseService.isEmailExists("*") >> true
+
+        when:
+        controller.isEmailExists()
+
+        then:
+        response.text == true
+
+
     }
 
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
 }
